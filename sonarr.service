@@ -1,0 +1,15 @@
+[Unit]
+Description=Smart PVR for newsgroup and bittorrent users
+
+[Service]
+ExecStart=/usr/bin/mono /usr/share/sonarr/NzbDrone.exe -nobrowser -data /var/lib/sonarr
+User=sonarr
+Group=sonarr
+Restart=on-failure
+RestartSec=5
+
+[Unit]
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
