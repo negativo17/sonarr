@@ -4,7 +4,7 @@
 Name:           sonarr
 Version:        2.0.0.5228
 Release:        1%{?dist}
-Summary:        Smart PVR for newsgroup and BitTorrent users
+Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
 BuildArch:      noarch
@@ -16,15 +16,13 @@ Source3:        https://raw.githubusercontent.com/Sonarr/Sonarr/develop/README.m
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
+BuildRequires:  firewalld-filesystem
 BuildRequires:  systemd
 BuildRequires:  tar
 
-# Required for the firewall rules
-# http://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
-
-Requires:       mono
+Requires:       mono-core
 Requires:       libmediainfo
 Requires:       sqlite
 
@@ -44,10 +42,12 @@ mkdir -p %{buildroot}%{_prefix}/lib/firewalld/services/
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
-cp -frv * %{buildroot}%{_datadir}/%{name}
+cp -fr * %{buildroot}%{_datadir}/%{name}
 
 install -m 0644 -p %{SOURCE10} %{buildroot}%{_unitdir}/%{name}.service
 install -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+
+find %{buildroot} -name "*.mdb" -delete
 
 %pre
 getent group %{group} >/dev/null || groupadd -r %{group}
