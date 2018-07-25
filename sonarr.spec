@@ -24,6 +24,7 @@ Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires:       mono-core
 Requires:       libmediainfo
+Requires(pre):  shadow-utils
 Requires:       sqlite
 
 %description
