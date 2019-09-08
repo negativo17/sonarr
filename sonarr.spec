@@ -2,7 +2,7 @@
 %global group %{name}
 
 Name:           sonarr
-Version:        2.0.0.5322
+Version:        2.0.0.5338
 Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
@@ -76,6 +76,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sun Sep 08 2019 Simone Caronni <negativo17@gmail.com> - 2.0.0.5338-1
+- Update to 2.0.0.5338.
+
 * Mon Apr 01 2019 Simone Caronni <negativo17@gmail.com> - 2.0.0.5322-1
 - Update to 2.0.0.5322.
 
