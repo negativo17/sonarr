@@ -2,7 +2,7 @@
 Description=Automated manager and downloader for TV series
 
 [Service]
-ExecStart=/usr/bin/mono --debug /usr/share/sonarr/NzbDrone.exe -nobrowser -data /var/lib/sonarr
+ExecStart=/usr/bin/mono --debug /usr/share/sonarr/Sonarr.exe -nobrowser -data /var/lib/sonarr
 User=sonarr
 Group=sonarr
 Restart=on-failure

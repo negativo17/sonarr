@@ -2,17 +2,17 @@
 %global group %{name}
 
 Name:           sonarr
-Version:        2.0.0.5344
+Version:        3.0.3.896
 Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
 BuildArch:      noarch
 
-Source0:        http://download.sonarr.tv/v2/master/mono/NzbDrone.master.%{version}.mono.tar.gz
-Source1:        https://raw.githubusercontent.com/Sonarr/Sonarr/develop/COPYRIGHT.md
-Source2:        https://raw.githubusercontent.com/Sonarr/Sonarr/develop/LICENSE.md
-Source3:        https://raw.githubusercontent.com/Sonarr/Sonarr/develop/README.md
+Source0:        https://download.sonarr.tv/v3/phantom-develop/%{version}/Sonarr.phantom-develop.%{version}.linux.tar.gz
+Source1:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/COPYRIGHT.md
+Source2:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/LICENSE.md
+Source3:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/README.md
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
@@ -34,7 +34,7 @@ them. It can also be configured to automatically upgrade the quality of files
 already downloaded when a better quality format becomes available.
 
 %prep
-%autosetup -n NzbDrone
+%autosetup -n Sonarr
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} .
 
 %install
@@ -76,6 +76,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sun Jun 28 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.896-1
+- Update to 3.0.3.896.
+
 * Wed Apr 01 2020 Simone Caronni <negativo17@gmail.com> - 2.0.0.5344-1
 - Update to 2.0.0.5344.
 
