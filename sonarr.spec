@@ -2,14 +2,14 @@
 %global group %{name}
 
 Name:           sonarr
-Version:        3.0.4.1139
+Version:        3.0.6.1196
 Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
 BuildArch:      noarch
 
-Source0:        https://download.sonarr.tv/v3/phantom-develop/%{version}/Sonarr.phantom-develop.%{version}.linux.tar.gz
+Source0:        https://download.sonarr.tv/v3/main/%{version}/Sonarr.main.%{version}.linux.tar.gz
 Source1:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/COPYRIGHT.md
 Source2:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/LICENSE.md
 Source3:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/README.md
@@ -76,6 +76,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Apr 19 2021 Simone Caronni <negativo17@gmail.com> - 3.0.6.1196-1
+- Update to 3.0.6.1196 from main branch.
+
 * Sun Mar 07 2021 Simone Caronni <negativo17@gmail.com> - 3.0.4.1139-1
 - Update to 3.0.4.1139.
 
