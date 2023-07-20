@@ -1,31 +1,73 @@
+# mock configuration:
+# - Requires network for running yarn/dotnet build
+
+%global commit0 dee8820b1f31e9180c55c6d29b950ff6cfe0205f
+%global date 20230720
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#global tag %{version}
+
+%global debug_package %{nil}
+%define _build_id_links none
+
 %global user %{name}
 %global group %{name}
 
+%global dotnet 6.0
+
+%ifarch x86_64
+%global rid x64
+%endif
+
+%ifarch aarch64
+%global rid arm64
+%endif
+
+%ifarch armv7hl
+%global rid arm
+%endif
+
+%if 0%{?fedora} >= 36
+%global __requires_exclude ^liblttng-ust\\.so\\.0.*$
+%endif
+
 Name:           sonarr
-Version:        3.0.10.1567
-Release:        1%{?dist}
+Version:        4.0.0.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
-BuildArch:      noarch
 
-Source0:        https://download.sonarr.tv/v3/main/%{version}/Sonarr.main.%{version}.linux.tar.gz
-Source1:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/COPYRIGHT.md
-Source2:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/LICENSE.md
-Source3:        https://raw.githubusercontent.com/Sonarr/Sonarr/phantom-develop/README.md
+BuildArch:      x86_64 aarch64 armv7hl
+
+%if 0%{?tag:1}
+Source0:        https://github.com/Radarr/Radarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+%else
+Source0:        https://github.com/Sonarr/Sonarr/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+%endif
+
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
+BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  nodejs
 BuildRequires:  systemd
 BuildRequires:  tar
+BuildRequires:  yarnpkg
 
 Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
-Requires:       mono-core
 Requires:       libmediainfo
-Requires(pre):  shadow-utils
 Requires:       sqlite
+Requires(pre):  shadow-utils
+
+%if 0%{?rhel} >= 8 || 0%{?fedora}
+Requires:       (%{name}-selinux if selinux-policy)
+%endif
+
+Obsoletes:      %{name} < 4.0.0
 
 %description
 Sonarr is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS
@@ -34,21 +76,61 @@ them. It can also be configured to automatically upgrade the quality of files
 already downloaded when a better quality format becomes available.
 
 %prep
-%autosetup -n Sonarr
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} .
+%if 0%{?tag:1}
+%autosetup -p1
+%else
+%autosetup -p1 -n Sonarr-%{commit0}
+%endif
+
+# Remove test coverage and Windows specific stuff from project file
+pushd src
+dotnet sln Sonarr.sln remove \
+  NzbDrone.Api.Test \
+  NzbDrone.Automation.Test \
+  NzbDrone.Common.Test \
+  NzbDrone.Core.Test \
+  NzbDrone.Host.Test \
+  NzbDrone.Integration.Test \
+  NzbDrone.Libraries.Test \
+  NzbDrone.Mono.Test \
+  NzbDrone.Test.Common \
+  NzbDrone.Test.Dummy \
+  NzbDrone.Update.Test \
+  NzbDrone.Windows.Test \
+  NzbDrone.Windows \
+  ServiceHelpers/ServiceInstall \
+  ServiceHelpers/ServiceUninstall
+popd
+
+%build
+pushd src
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+dotnet publish \
+    --configuration Release \
+    --framework net%{dotnet} \
+    --output _output \
+    --runtime linux-%{rid} \
+    --self-contained \
+    --verbosity normal \
+    Sonarr.sln
+popd
+
+# Use a huge timeout for aarch64 builds
+yarn install --frozen-lockfile --network-timeout 1000000
+yarn run build --mode production
 
 %install
-mkdir -p %{buildroot}%{_datadir}/%{name}
-mkdir -p %{buildroot}%{_prefix}/lib/firewalld/services/
-mkdir -p %{buildroot}%{_unitdir}
+mkdir -p %{buildroot}%{_libdir}/%{name}
 mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
-cp -fr * %{buildroot}%{_datadir}/%{name}
+cp -a src/_output/* _output/UI %{buildroot}%{_libdir}/%{name}/
 
-install -m 0644 -p %{SOURCE10} %{buildroot}%{_unitdir}/%{name}.service
-install -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+install -D -m 0644 -p %{SOURCE10} %{buildroot}%{_unitdir}/%{name}.service
+install -D -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
 
-find %{buildroot} -name "*.mdb" -delete
+find %{buildroot} -name "*.pdb" -delete
+find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 
 %pre
 getent group %{group} >/dev/null || groupadd -r %{group}
@@ -68,14 +150,18 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %files
-%license COPYRIGHT.md LICENSE.md
+%license COPYRIGHT.md LICENSE.md SECURITY.md
 %doc README.md
 %attr(750,%{user},%{group}) %{_sharedstatedir}/%{name}
-%{_datadir}/%{name}
+%{_libdir}/%{name}
 %{_prefix}/lib/firewalld/services/%{name}.xml
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Jul 20 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-1.20230720gitdee8820
+- Update to 4.x snapshot, switch to .NET.
+- Trim changelog.
+
 * Tue Apr 11 2023 Simone Caronni <negativo17@gmail.com> - 3.0.10.1567-1
 - Update to 3.0.10.1567.
 
@@ -114,57 +200,3 @@ exit 0
 
 * Thu Jan  7 2021 Simone Caronni <negativo17@gmail.com> - 3.0.4.1059-1
 - Update to 3.0.4.1059.
-
-* Sat Dec 26 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.1039-1
-- Update to 3.0.4.1039.
-
-* Tue Dec 08 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.1024-1
-- Update to 3.0.4.1024.
-
-* Sat Nov 21 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.1017-1
-- Update to 3.0.4.1017.
-
-* Tue Nov 17 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.1009-1
-- Update to 3.0.4.1009.
-
-* Thu Nov 05 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.993-1
-- Update to 3.0.4.993.
-
-* Thu Oct 29 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.991-1
-- Update to 3.0.4.991.
-
-* Fri Oct 16 2020 Simone Caronni <negativo17@gmail.com> - 3.0.4.982-1
-- Update to 3.0.4.982.
-
-* Tue Oct 06 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.955-1
-- Update to 3.0.3.955.
-
-* Tue Aug 25 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.911-1
-- Update to 3.0.3.911.
-
-* Sun Aug 16 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.907-1
-- Update to 3.0.3.907.
-
-* Tue Jul 14 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.899-1
-- Update to 3.0.3.899.
-
-* Sun Jun 28 2020 Simone Caronni <negativo17@gmail.com> - 3.0.3.896-1
-- Update to 3.0.3.896.
-
-* Wed Apr 01 2020 Simone Caronni <negativo17@gmail.com> - 2.0.0.5344-1
-- Update to 2.0.0.5344.
-
-* Sun Sep 08 2019 Simone Caronni <negativo17@gmail.com> - 2.0.0.5338-1
-- Update to 2.0.0.5338.
-
-* Mon Apr 01 2019 Simone Caronni <negativo17@gmail.com> - 2.0.0.5322-1
-- Update to 2.0.0.5322.
-
-* Thu Jan 24 2019 Simone Caronni <negativo17@gmail.com> - 2.0.0.5301-1
-- Update to 2.0.0.5301.
-
-* Wed Oct 10 2018 Simone Caronni <negativo17@gmail.com> - 2.0.0.5252-1
-- Update to 2.0.0.5252.
-
-* Fri Jul 20 2018 Simone Caronni <negativo17@gmail.com> - 2.0.0.5228-1
-- First build.
