@@ -1,8 +1,8 @@
 # mock configuration:
 # - Requires network for running yarn/dotnet build
 
-%global commit0 faecdc855f449e459b7704ff5e6b891c85c24c5c
-%global date 20230902
+%global commit0 0abb4ceb26cf098d805274869e47709c52507c15
+%global date 20230911
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -32,7 +32,7 @@
 
 Name:           sonarr
 Version:        4.0.0.0
-Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -40,7 +40,7 @@ URL:            https://sonarr.tv/
 BuildArch:      x86_64 aarch64 armv7hl
 
 %if 0%{?tag:1}
-Source0:        https://github.com/Radarr/Radarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 %else
 Source0:        https://github.com/Sonarr/Sonarr/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
@@ -103,18 +103,12 @@ dotnet sln Sonarr.sln remove \
 popd
 
 %build
-pushd src
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-dotnet publish \
-    --configuration Release \
-    --framework net%{dotnet} \
-    --output _output \
-    --runtime linux-%{rid} \
-    --self-contained \
-    --verbosity normal \
-    Sonarr.sln
-popd
+dotnet msbuild -restore src/Sonarr.sln \
+    -p:RuntimeIdentifiers=linux-%{rid} \
+    -p:Configuration=Release \
+    -p:Platform=Posix \
+    -v:normal
 
 # Use a huge timeout for aarch64 builds
 yarn install --frozen-lockfile --network-timeout 1000000
@@ -124,7 +118,7 @@ yarn run build --mode production
 mkdir -p %{buildroot}%{_libdir}/%{name}
 mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
-cp -a src/_output/* _output/UI %{buildroot}%{_libdir}/%{name}/
+cp -a _output/net%{dotnet}/* _output/UI %{buildroot}%{_libdir}/%{name}/
 
 install -D -m 0644 -p %{SOURCE10} %{buildroot}%{_unitdir}/%{name}.service
 install -D -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
@@ -158,6 +152,10 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Sep 11 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-6.20230911git0abb4ce
+- Update to latest snapshot.
+- Change build to more closely match upstream.
+
 * Mon Sep 04 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-5.20230902gitfaecdc8
 - Update to latest snapshot.
 
