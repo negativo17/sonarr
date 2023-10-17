@@ -1,8 +1,8 @@
 # mock configuration:
 # - Requires network for running yarn/dotnet build
 
-%global commit0 b4ef873cc3386042ba870a4390063dc8add3b748
-%global date 20230930
+%global commit0 a131c88d5fe04af75bab7b0feadcf7c81aec9f81
+%global date 20231017
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -32,7 +32,7 @@
 
 Name:           sonarr
 Version:        4.0.0.0
-Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -152,6 +152,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Tue Oct 17 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-8.20231017gita131c88
+- Update to latest snapshot.
+
 * Tue Oct 03 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-7.20230930gitb4ef873
 - Update to latest snapshot.
 
