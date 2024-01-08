@@ -67,7 +67,7 @@ them. It can also be configured to automatically upgrade the quality of files
 already downloaded when a better quality format becomes available.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n Sonarr-%{version}
 
 # Remove test coverage and Windows specific stuff from project file
 pushd src
