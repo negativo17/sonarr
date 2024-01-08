@@ -1,11 +1,6 @@
 # mock configuration:
 # - Requires network for running yarn/dotnet build
 
-%global commit0 e291834393ce29a1c5c631875e47c62362031e1d
-%global date 20231218
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
-
 %global debug_package %{nil}
 %define _build_id_links none
 
@@ -31,19 +26,15 @@
 %endif
 
 Name:           sonarr
-Version:        4.0.0.0
-Release:        14%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        4.0.0.748
+Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
 
 BuildArch:      x86_64 aarch64 armv7hl
 
-%if 0%{?tag:1}
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-%else
-Source0:        https://github.com/Sonarr/Sonarr/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-%endif
 
 Source10:       %{name}.service
 Source11:       %{name}.xml
@@ -76,11 +67,7 @@ them. It can also be configured to automatically upgrade the quality of files
 already downloaded when a better quality format becomes available.
 
 %prep
-%if 0%{?tag:1}
 %autosetup -p1
-%else
-%autosetup -p1 -n Sonarr-%{commit0}
-%endif
 
 # Remove test coverage and Windows specific stuff from project file
 pushd src
@@ -152,6 +139,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Jan 08 2024 Simone Caronni <negativo17@gmail.com> - 4.0.0.748-1
+- Update to version 4.0.0.748.
+
 * Thu Dec 21 2023 Simone Caronni <negativo17@gmail.com> - 4.0.0.0-14.20231218gite291834
 - Update to latest snapshot.
 
