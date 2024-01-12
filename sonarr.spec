@@ -69,6 +69,8 @@ already downloaded when a better quality format becomes available.
 %prep
 %autosetup -p1 -n Sonarr-%{version}
 
+rm -f global.json
+
 # Remove test coverage and Windows specific stuff from project file
 pushd src
 dotnet sln Sonarr.sln remove \
