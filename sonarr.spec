@@ -26,7 +26,7 @@
 %endif
 
 Name:           sonarr
-Version:        4.0.2.1341
+Version:        4.0.3.1413
 Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
@@ -141,6 +141,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Tue Apr 02 2024 Simone Caronni <negativo17@gmail.com> - 4.0.3.1413-1
+- Update to 4.0.3.1413.
+
 * Wed Mar 20 2024 Simone Caronni <negativo17@gmail.com> - 4.0.2.1341-1
 - Update to 4.0.2.1341.
 
