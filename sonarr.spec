@@ -53,10 +53,7 @@ Requires(post): firewalld-filesystem
 Requires:       libmediainfo
 Requires:       sqlite
 Requires(pre):  shadow-utils
-
-%if 0%{?rhel} >= 8 || 0%{?fedora}
-Requires:       (%{name}-selinux if selinux-policy)
-%endif
+Requires:       %{name}-selinux
 
 Obsoletes:      %{name} < 4.0.0
 
