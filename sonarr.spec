@@ -39,6 +39,8 @@ Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{n
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
+Patch0:         https://github.com/Sonarr/Sonarr/commit/f8a879f4c1a1ef1fb4df915d8308af07114f0422.patch
+
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
 BuildRequires:  gcc
