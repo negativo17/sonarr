@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.13.2932
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -35,7 +35,7 @@ URL:            https://sonarr.tv/
 BuildArch:      x86_64 aarch64 armv7hl
 
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-
+Patch0:         %{name}-imagesharp.patch
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
@@ -139,6 +139,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Tue Mar 11 2025 Simone Caronni <negativo17@gmail.com> - 4.0.13.2932-2
+- Fix for GHSA-65x7-c272-7g7r.
+
 * Thu Feb 13 2025 Simone Caronni <negativo17@gmail.com> - 4.0.13.2932-1
 - Update to 4.0.13.2932.
 
