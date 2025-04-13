@@ -35,7 +35,6 @@ URL:            https://sonarr.tv/
 BuildArch:      x86_64 aarch64 armv7hl
 
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Patch0:         %{name}-imagesharp.patch
 Source10:       %{name}.service
 Source11:       %{name}.xml
 
