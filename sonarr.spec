@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.15.2941
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -37,6 +37,7 @@ BuildArch:      x86_64 aarch64 armv7hl
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source10:       %{name}.service
 Source11:       %{name}.xml
+Patch0:         %{name}-imagesharp.patch
 
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
@@ -140,6 +141,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sat Sep 06 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-3
+- Fix SixLabors.ImageSharp 3.1.7 vulnerability.
+
 * Sat Sep 06 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-2
 - Make sure tracerpt is disabled, it requires an old liblttng-ust.
 
