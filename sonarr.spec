@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.15.2941
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -112,6 +112,8 @@ install -D -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/
 find %{buildroot} -name "*.pdb" -delete
 find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 
+find . -name libcoreclrtraceptprovider.so -delete
+
 %pre
 getent group %{group} >/dev/null || groupadd -r %{group}
 getent passwd %{user} >/dev/null || \
@@ -138,6 +140,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sat Sep 06 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-2
+- Make sure tracerpt is disabled, it requires an old liblttng-ust.
+
 * Mon Jul 14 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-1
 - Update to 4.0.15.2941.
 
