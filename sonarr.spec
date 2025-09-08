@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.15.2941
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -101,6 +101,8 @@ dotnet msbuild -restore src/Sonarr.sln \
 yarn install --frozen-lockfile --network-timeout 1000000
 yarn run build --mode production
 
+find . -name libcoreclrtraceptprovider.so -delete
+
 %install
 mkdir -p %{buildroot}%{_libdir}/%{name}
 mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
@@ -112,8 +114,6 @@ install -D -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/
 
 find %{buildroot} -name "*.pdb" -delete
 find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
-
-find . -name libcoreclrtraceptprovider.so -delete
 
 %pre
 getent group %{group} >/dev/null || groupadd -r %{group}
@@ -141,6 +141,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Sep 08 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-4
+- Fix typo.
+
 * Sat Sep 06 2025 Simone Caronni <negativo17@gmail.com> - 4.0.15.2941-3
 - Fix SixLabors.ImageSharp 3.1.7 vulnerability.
 
