@@ -35,9 +35,9 @@ URL:            https://sonarr.tv/
 BuildArch:      x86_64 aarch64 armv7hl
 
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source10:       %{name}.service
-Source11:       %{name}.xml
-Source12:       %{name}.sysusers.conf
+Source1:        %{name}.service
+Source2:        %{name}.xml
+Source3:        %{name}.sysusers.conf
 
 Patch0:         %{name}-imagesharp.patch
 
@@ -46,7 +46,7 @@ BuildRequires:  firewalld-filesystem
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  nodejs
-BuildRequires:  systemd
+BuildRequires:  systemd-rpm-macros
 BuildRequires:  tar
 BuildRequires:  yarnpkg
 
@@ -110,9 +110,9 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
 cp -a _output/net*/* _output/UI %{buildroot}%{_libdir}/%{name}/
 
-install -D -m 0644 -p %{SOURCE10} %{buildroot}%{_unitdir}/%{name}.service
-install -D -m 0644 -p %{SOURCE11} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
-install -D -m 0644 -p %{SOURCE12} %{buildroot}%{_sysusersdir}/%{name}.conf
+install -D -m 0644 -p %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
+install -D -m 0644 -p %{SOURCE2} %{buildroot}%{_unitdir}/%{name}.service
+install -D -m 0644 -p %{SOURCE3} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
 
 find %{buildroot} -name "*.pdb" -delete
 find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
