@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.16.2944
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -112,15 +112,15 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
 cp -a _output/net*/* _output/UI %{buildroot}%{_libdir}/%{name}/
 
-install -D -m 0644 -p %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
-install -D -m 0644 -p %{SOURCE2} %{buildroot}%{_unitdir}/%{name}.service
-install -D -m 0644 -p %{SOURCE3} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+install -D -m 0644 -p %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -D -m 0644 -p %{SOURCE2} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+install -D -m 0644 -p %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 
 find %{buildroot} -name "*.pdb" -delete
 find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 
 %pre
-%sysusers_create_compat %{SOURCE1}
+%sysusers_create_compat %{SOURCE3}
 
 %post
 %systemd_post %{name}.service
@@ -142,6 +142,9 @@ find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 %{_unitdir}/%{name}.service
 
 %changelog
+* Fri Jan 09 2026 Simone Caronni <negativo17@gmail.com> - 4.0.16.2944-4
+- Fix sysusers creation.
+
 * Wed Nov 26 2025 Simone Caronni <negativo17@gmail.com> - 4.0.16.2944-3
 - SPEC file cleanup.
 
