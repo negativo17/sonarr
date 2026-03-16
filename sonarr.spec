@@ -4,9 +4,6 @@
 %global debug_package %{nil}
 %define _build_id_links none
 
-%global user %{name}
-%global group %{name}
-
 %global dotnet 8.0
 
 %ifarch x86_64
@@ -27,7 +24,7 @@
 
 Name:           sonarr
 Version:        4.0.16.2944
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -110,9 +107,9 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
 cp -a _output/net*/* _output/UI %{buildroot}%{_libdir}/%{name}/
 
-install -D -m 0644 -p %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
-install -D -m 0644 -p %{SOURCE2} %{buildroot}%{_unitdir}/%{name}.service
-install -D -m 0644 -p %{SOURCE3} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+install -D -m 0644 -p %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -D -m 0644 -p %{SOURCE2} %{buildroot}%{_prefix}/lib/firewalld/services/%{name}.xml
+install -D -m 0644 -p %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 
 find %{buildroot} -name "*.pdb" -delete
 find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
@@ -130,13 +127,16 @@ find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 %files
 %license COPYRIGHT.md LICENSE.md SECURITY.md
 %doc README.md
-%attr(750,%{user},%{group}) %{_sharedstatedir}/%{name}
+%attr(750,%{name},%{name}) %{_sharedstatedir}/%{name}
 %{_libdir}/%{name}
 %{_prefix}/lib/firewalld/services/%{name}.xml
 %{_sysusersdir}/%{name}.conf
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Mar 16 2026 Simone Caronni <negativo17@gmail.com> - 4.0.16.2944-3
+- Fix sysusers creation.
+
 * Thu Nov 20 2025 Simone Caronni <negativo17@gmail.com> - 4.0.16.2944-2
 - Switch to sysusers.d
 
