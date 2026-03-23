@@ -26,8 +26,8 @@
 %endif
 
 Name:           sonarr
-Version:        4.0.16.2944
-Release:        4%{?dist}
+Version:        4.0.17.2952
+Release:        1%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -142,6 +142,9 @@ find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 %{_unitdir}/%{name}.service
 
 %changelog
+* Mon Mar 23 2026 Simone Caronni <negativo17@gmail.com> - 4.0.17.2952-1
+- Update to 4.0.17.2952.
+
 * Fri Jan 09 2026 Simone Caronni <negativo17@gmail.com> - 4.0.16.2944-4
 - Fix sysusers creation.
 
