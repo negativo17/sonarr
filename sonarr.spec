@@ -37,7 +37,6 @@ BuildArch:      x86_64 aarch64 armv7hl
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source10:       %{name}.service
 Source11:       %{name}.xml
-Patch0:         %{name}-imagesharp.patch
 
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
