@@ -36,8 +36,6 @@ Source1:        %{name}.service
 Source2:        %{name}.xml
 Source3:        %{name}.sysusers.conf
 
-Patch0:         %{name}-imagesharp.patch
-
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
 BuildRequires:  gcc
