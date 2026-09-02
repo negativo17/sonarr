@@ -27,7 +27,7 @@
 
 Name:           sonarr
 Version:        4.0.19.2979
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -37,6 +37,7 @@ BuildArch:      x86_64 aarch64 armv7hl
 Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source10:       %{name}.service
 Source11:       %{name}.xml
+Patch0:         https://patch-diff.githubusercontent.com/raw/Sonarr/Sonarr/pull/8930.patch
 
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
@@ -140,6 +141,9 @@ exit 0
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Sep 02 2026 Simone Caronni <negativo17@gmail.com> - 4.0.19.2979-2
+- Drop unused dependencies.
+
 * Sun Aug 09 2026 Simone Caronni <negativo17@gmail.com> - 4.0.19.2979-1
 - Update to 4.0.19.2979.
 
