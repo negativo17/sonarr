@@ -38,8 +38,6 @@ Source0:        https://github.com/Sonarr/Sonarr/archive/v%{version}.tar.gz#/%{n
 Source1:        %{name}.service
 Source2:        %{name}.xml
 Source3:        %{name}.sysusers.conf
-# https://github.com/Sonarr/Sonarr/pull/8930
-Patch0:         sonarr-unused-deps.patch
 
 BuildRequires:  dotnet-sdk-%{dotnet}
 BuildRequires:  firewalld-filesystem
