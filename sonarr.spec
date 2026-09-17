@@ -24,7 +24,7 @@
 
 Name:           sonarr
 Version:        4.0.20.3014
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -47,6 +47,7 @@ BuildRequires:  yarnpkg
 
 Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
+Requires:       libicu
 Requires:       libmediainfo
 Requires:       sqlite
 Requires:       %{name}-selinux
@@ -132,6 +133,9 @@ find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Sep 17 2026 Simone Caronni <negativo17@gmail.com> - 4.0.20.3014-3
+- Add missing requirement.
+
 * Thu Sep 17 2026 Simone Caronni <negativo17@gmail.com> - 4.0.20.3014-2
 - Build with .NET SDK 10.
 
