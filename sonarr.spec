@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 %define _build_id_links none
 
-%global dotnet 8.0
+%global dotnet 10.0
 
 %ifarch x86_64
 %global rid x64
@@ -24,7 +24,7 @@
 
 Name:           sonarr
 Version:        4.0.20.3014
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Automated manager and downloader for TV series
 License:        GPLv3
 URL:            https://sonarr.tv/
@@ -132,6 +132,9 @@ find %{buildroot} -name "ffprobe" -exec chmod 0755 {} \;
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Sep 17 2026 Simone Caronni <negativo17@gmail.com> - 4.0.20.3014-2
+- Build with .NET SDK 10.
+
 * Wed Sep 16 2026 Simone Caronni <negativo17@gmail.com> - 4.0.20.3014-1
 - Update to 4.0.20.3014.
 
